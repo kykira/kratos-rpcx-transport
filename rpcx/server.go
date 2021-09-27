@@ -131,6 +131,7 @@ func (s *Server) Endpoint() (*url.URL, error) {
 			return
 		}
 		s.lis = lis
+		s.address = addr
 		s.endpoint = endpoint.NewEndpoint("rpcx", addr, s.tlsConf != nil)
 	})
 	if s.err != nil {

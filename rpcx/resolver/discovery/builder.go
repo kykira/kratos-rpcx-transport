@@ -57,7 +57,7 @@ func NewBuilder(d registry.Discovery, opts ...Option) *builder {
 	return b
 }
 
-func (b *builder) Build(endpoint string, cc *client.MultipleServersDiscovery) error {
+func (b *builder) Build(serverName string, cc *client.MultipleServersDiscovery) error {
 	var (
 		err error
 		w   registry.Watcher
@@ -65,7 +65,7 @@ func (b *builder) Build(endpoint string, cc *client.MultipleServersDiscovery) er
 	done := make(chan bool, 1)
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
-		w, err = b.discoverer.Watch(ctx, endpoint)
+		w, err = b.discoverer.Watch(ctx, serverName)
 		close(done)
 	}()
 	select {

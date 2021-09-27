@@ -70,9 +70,9 @@ func WithFailMode(f client.FailMode) ClientOption {
 }
 
 // WithServerPath with RPCx serverPath.
-func WithServerPath(servicePath string) ClientOption {
+func WithServerName(serviceName string) ClientOption {
 	return func(o *clientOptions) {
-		o.servicePath = servicePath
+		o.serviceName = serviceName
 	}
 }
 
@@ -86,7 +86,7 @@ type clientOptions struct {
 	rpcXOpts    client.Option
 	selectMode  client.SelectMode
 	failMode    client.FailMode
-	servicePath string
+	serviceName string
 }
 
 // Dial returns a RPCx connection.
@@ -116,7 +116,7 @@ func dial(insecure bool, opts ...ClientOption) (client.XClient, error) {
 	if options.discovery != nil {
 		cc, _ := client.NewMultipleServersDiscovery([]*client.KVPair{})
 		b := discovery.NewBuilder(options.discovery, discovery.WithInsecure(insecure))
-		err := b.Build(options.endpoint, cc)
+		err := b.Build(options.serviceName, cc)
 		if err != nil {
 			return nil, err
 		}
@@ -129,5 +129,5 @@ func dial(insecure bool, opts ...ClientOption) (client.XClient, error) {
 }
 
 func buildXClient(cc client.ServiceDiscovery, options clientOptions) client.XClient {
-	return client.NewXClient(options.servicePath, options.failMode, options.selectMode, cc, options.rpcXOpts)
+	return client.NewXClient(options.serviceName, options.failMode, options.selectMode, cc, options.rpcXOpts)
 }
